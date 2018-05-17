@@ -1,0 +1,16 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3.7.5
+  redis:
+    image: redis:4.0.9
+  collectd:
+    image: collectd:sddj
+    volumes:
+      - ./collectd.d:/etc/collectd.d
+  nginx:
+    image: nginx:1.14.0
+  minemeld:
+    image: minemeld
+    environment:
+      - REDIS_URL=redis://redis:6379/0
