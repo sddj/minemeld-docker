@@ -1,0 +1,6 @@
+minemeld.d/collectd.sock
+minemeld.d/running-config*.yml
+minemeld.d/spamhaus_DROP
+shared.d/log/collectd.log
+shared.d/rrd/minemeld
+shared.d/rrd/system

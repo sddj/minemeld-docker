@@ -1,0 +1,11 @@
+#!/bin/bash
+COLLECTD_SOCK="${w}/minemeld-docker-1/minemeld.d/collectd.sock"
+if [ -e "${COLLECTD_SOCK}" -a ! -S "${COLLECTD_SOCK}" ]; then
+    echo 1>&2 "${COLLECTD_SOCK} exists and is not a socket"
+    exit 1
+fi
+if [ -e "${COLLECTD_SOCK}" ]; then
+    rm "${COLLECTD_SOCK}"
+fi
+
+exec socat -v "UNIX-LISTEN:${COLLECTD_SOCK},fork" TCP-CONNECT:127.0.0.1:10003
