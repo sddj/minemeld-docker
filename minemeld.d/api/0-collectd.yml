@@ -1,0 +1,2 @@
+RRD_PATH: ../shared.d/rrd/minemeld
+RRD_SOCKET_PATH: tcp://127.0.0.1:10003

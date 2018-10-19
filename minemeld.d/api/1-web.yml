@@ -1,0 +1,7 @@
+MINEMELD_LOCAL_LIBRARY_PATH: .
+MINEMELD_LOG_DIRECTORY_PATH: /Users/dan/r/dev/minemeld-docker/minemeld.d
+MINEMELD_PROTOTYPE_PATH: ../../minemeld-node-prototypes/prototypes
+MGMTBUS:
+  class: AMQP
+  config:
+    host: 127.0.0.1:10002

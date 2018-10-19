@@ -50,5 +50,5 @@ mgmtbus:
       priority: -2
   master:
     REDIS_URL: redis://127.0.0.1:10001/0
-    COLLECTD_SOCKET: collectd.sock
+    COLLECTD_SOCKET: tcp://127.0.0.1:10003
   slave:

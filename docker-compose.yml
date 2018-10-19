@@ -2,8 +2,10 @@ version: '3'
 services:
   collectd:
     image: collectd:sddj
+    build:
+      context: ./collectd
     ports:
-      - '127.0.0.1:10003:8888'
+      - '127.0.0.1:10003:25826'
     volumes:
       - ./collectd.d:/etc/collectd.d
       - ./shared.d:/shared.d
@@ -18,16 +20,18 @@ services:
     image: redis:4.0.9
     ports:
       - '127.0.0.1:10001:6379'
-  minemeld:
-    image: minemeld
-    environment:
-      - MINEMELD_PROTOTYPE_PATH=/etc/collectd.d/prototypes
-    links:
-      - rabbitmq
-      - redis
-    volumes:
-      - ./collectd.d:/etc/collectd.d
-  nginx:
-    image: nginx:1.14.0
-    links:
-      - minemeld
+  # minemeld:
+  #   image: minemeld
+  #   environment:
+  #     - MINEMELD_PROTOTYPE_PATH=/etc/collectd.d/prototypes
+  #     - RRD_SOCKET_PATH=tcp://collectd:25826
+  #   links:
+  #     - collectd
+  #     - rabbitmq
+  #     - redis
+  #   volumes:
+  #     - ./collectd.d:/etc/collectd.d
+  # nginx:
+  #   image: nginx:1.14.0
+  #   links:
+  #     - minemeld
