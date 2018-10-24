@@ -1,0 +1,16 @@
+store:
+  max_tables: 5
+transport:
+  class: AMQP
+  config:
+    host: 127.0.0.1:10002
+topic: mbus:log
+writer:
+  threshold: 70
+queryprocessor:
+  max_concurrency: 10
+  redis:
+    host: 127.0.0.1
+    port: 10001
+    password: null
+    db: 0
