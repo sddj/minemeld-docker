@@ -1,0 +1,117 @@
+#!/bin/bash
+if [ -z "${w}" ]; then
+    echo 1>&2 'Please set $w to the directory containing the atat-api project'
+    exit 1
+fi
+
+if [ ! -f $w/minemeld-docker/minemeld.d/api/wsgi.htpasswd ]; then
+    htpasswd -bc $w/minemeld-docker/minemeld.d/api/wsgi.htpasswd admin minemeld
+fi
+if [ ! -f $w/minemeld-docker/minemeld.d/api/feeds.htpasswd ]; then
+    cat </dev/null >$w/minemeld-docker/minemeld.d/api/feeds.htpasswd
+fi
+
+cd $w
+for i in core node-prototypes webui; do
+    if [ ! -d $w/minemeld-$i ]; then
+        git clone git@github.com:sddj/minemeld-$i.git
+        git remote add upstream git@github.com:PaloAltoNetworks/minemeld-$i.git
+    fi
+done
+
+cd $w/minemeld-core
+mkdir -p minemeld/cli
+echo 2.7.15 >.python-version
+if ! grep .python-version .gitignore >/dev/null 2>&1; then
+    (echo .python-version; echo minemeld/cli) >> .gitignore
+fi
+(
+  echo "from gevent.monkey import patch_all"
+  echo ""
+  echo "patch_all()"
+  echo ""
+  echo ""
+  echo "def setup():"
+  echo "    pass"
+) >minemeld/cli/init.py
+(
+  echo "import sys"
+  echo ""
+  echo "from init import setup"
+  echo ""
+  echo "import json"
+  echo "import os"
+  echo ""
+  echo "import pkg_resources"
+  echo ""
+  echo "from minemeld.run.launcher import main"
+  echo ""
+  echo ""
+  echo "def _initialize_default_nodes_distribution(ws):"
+  echo "    try:"
+  echo "        with open(os.environ['MINEMELD_NODES_PATH'], 'r') as f:"
+  echo "            node_definitions = json.load(f)"
+  echo "        node_endpoints = ["
+  echo "            '{} = {}'.format(xk, xv['class'])"
+  echo "            for xk, xv in node_definitions.items()"
+  echo "            if 'class' in xv"
+  echo "        ]"
+  echo "        project_name = 'minemeld_synthetic_core'"
+  echo "        project_version = '1.0'"
+  echo "        python_version = '2.7'"
+  echo "        dist = pkg_resources.Distribution("
+  echo "            location='/tmp/{}-{}-py{}.egg'.format(project_name, project_version, python_version),"
+  echo "            project_name=project_name,"
+  echo "            version=project_version,"
+  echo "            py_version=python_version"
+  echo "        )"
+  echo "        node_map = {'minemeld_nodes': node_endpoints}"
+  echo "        dist._ep_map = pkg_resources.EntryPoint.parse_map(node_map, dist)"
+  echo "        ws.add(dist)"
+  echo "    except (KeyError, OSError):"
+  echo "        pass"
+  echo ""
+  echo ""
+  echo "if __name__ == '__main__':"
+  echo "    WS = pkg_resources.WorkingSet()"
+  echo "    _initialize_default_nodes_distribution(WS)"
+  echo "    setattr(sys.modules['minemeld.loader'], '_WS', WS)"
+  echo "    setup()"
+  echo "    main()"
+) >minemeld/cli/engine.py
+(
+  echo "from init import setup"
+  echo "from minemeld.flask.main import app"
+  echo ""
+  echo ""
+  echo "if __name__ == '__main__':"
+  echo "    setup()"
+  echo "    app.run(threaded=True)"
+) >minemeld/cli/web.py
+(
+  echo "from init import setup"
+  echo "from minemeld.traced.main import main"
+  echo ""
+  echo ""
+  echo "if __name__ == '__main__':"
+  echo "    setup()"
+  echo "    main()"
+) >minemeld/cli/traced.py
+
+cd $w/minemeld-webui
+echo 2.7.15 >.python-version
+if ! grep .python-version .gitignore >/dev/null 2>&1; then
+    echo .python-version >> .gitignore
+fi
+[ -d ../pyenv ] || mkdir -p ../pyenv
+[ -d ../pyenv/minemeld-webui ] || virtualenv ../pyenv/minemeld-webui
+. ../pyenv/minemeld-webui/bin/activate
+[ -d ../nodeenv ] || mkdir -p ../nodeenv
+[ -d ../nodeenv/minemeld-webui ] || nodeenv -v -n 4.2.6 --npm=2.14.7 --prebuilt -c ../nodeenv/minemeld-webui
+. ../nodeenv/minemeld-webui/bin/activate
+npm install
+PATH=$(npm bin):$PATH
+bower install
+typings install
+nsp check
+gulp build
