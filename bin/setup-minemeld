@@ -25,6 +25,8 @@ echo 2.7.15 >.python-version
 if ! grep .python-version .gitignore >/dev/null 2>&1; then
     (echo .python-version; echo minemeld/cli) >> .gitignore
 fi
+[ -d ../pyenv ] || mkdir -p ../pyenv
+[ -d ../pyenv/minemeld-core ] || virtualenv ../pyenv/minemeld-core
 if ! grep '# Dockerization' requirements.txt >/dev/null 2>&1; then
   (
     echo "# Dockerization"

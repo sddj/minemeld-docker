@@ -1,89 +1,77 @@
-1. Setup minemeld-core
-
-1.1. You need leveldb to install the plyvel Python package and rrdtool for the rrdtool Python package
-```
-brew install leveldb rrdtool nodeenv
-```
-
-1.2. Make wrappers for the PyCharm debugger:
-```
-cd $w/minemeld-docker
-bin/setup-minemeld
-```
-
-1.3. Setup the "engine" debug target:
-Script path: $w/minemeld-core/minemeld/cli/engine.py
-Parameters: .
-Environment variables:
-  - PYTHONUNBUFFERED=1
-  - OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
-  - MINEMELD_PROTOTYPE_PATH=../../minemeld-node-prototypes/prototypes
-  - MINEMELD_NODES_PATH=../../minemeld-core/nodes.json
-Working directory: $w/minemeld-docker/minemeld.d
-
-1.4. Setup the "web" debug target:
-Script path: $w/minemeld-core/minemeld/cli/web.py
-Parameters: .
-Environment variables:
-  - PYTHONUNBUFFERED=1
-  - MM_CONFIG=.
-  - MINEMELD_LOCAL_PATH=../shared.d
-  - API_CONFIG_LOCK=./api/api-config.lock
-  - REDIS_URL=redis://127.0.0.1:10001/0
-Working directory: $w/minemeld-docker/minemeld.d
-
-1.5. Setup the "traced" debug target:
-Script path: $w/minemeld-core/minemeld/cli/traced.py
-Parameters: traced.yml
-Environment variables:
-  - PYTHONUNBUFFERED=1
-Working directory: $w/minemeld-docker/minemeld.d
-
-1.6. Build and start the docker-based services:
-
-```
-docker-compose build
-docker-compose up collectd rabbitmq redis
-```
-
-1.7. Debug the "engine" target
-
-1.8. Debug the "web" target
-
-1.9. Debug the "traced" target
-
+1. Setup minemeld-core  
+    1. You need leveldb to install the plyvel Python package and rrdtool for the rrdtool Python package
+        ```
+        brew install leveldb rrdtool nodeenv
+        ```
+    2. Make wrappers for the PyCharm debugger:
+        ```
+        cd $w/minemeld-docker
+        bin/setup-minemeld
+        ```
+    3. Configure the PyCharm minemeld-core project with the custom Python environment  
+        On the "PyCharm>Preferences...>Project: minemeld-core>Project Interpreter" page, click the settings gear
+        and "Add..." a new Project Interpreter.  Choose "Virtual Environment>Existing environment" and set the
+        Interpreter to ```${w}/pyenv/minemeld-core/bin/python```
+    3. Setup the "engine" debug target:
+        <table>
+        <tr><td>Script path</td><td>$w/minemeld-core/minemeld/cli/engine.py</td></tr>
+        <tr><td>Parameters</td><td>.</td></tr>
+        <tr><td>Environment variables</td><td>PYTHONUNBUFFERED=1  
+                                    OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES  
+                                    MINEMELD_PROTOTYPE_PATH=../../minemeld-node-prototypes/prototypes  
+                                    MINEMELD_NODES_PATH=../../minemeld-core/nodes.json</td></tr>
+        <tr><td>Working directory</td><td>$w/minemeld-docker/minemeld.d</td></tr>
+        </table>
+    4. Setup the "web" debug target:  
+        <table>
+        <tr><td>Script path</td><td>$w/minemeld-core/minemeld/cli/web.py</td></tr>
+        <tr><td>Parameters</td><td>.</td></tr>
+        <tr><td>Environment variables</td><td>PYTHONUNBUFFERED=1  
+                                              MM_CONFIG=.  
+                                              MINEMELD_LOCAL_PATH=../shared.d  
+                                              API_CONFIG_LOCK=./api/api-config.lock  
+                                              REDIS_URL=redis://127.0.0.1:10001/0</td></tr>
+        <tr><td>Working directory</td><td>$w/minemeld-docker/minemeld.d</td></tr>
+        </table>
+    5. Setup the "traced" debug target:  
+        <table>
+        <tr><td>Script path</td><td>$w/minemeld-core/minemeld/cli/traced.py</td></tr>
+        <tr><td>Parameters</td><td>traced.yml</td></tr>
+        <tr><td>Environment variables</td><td>PYTHONUNBUFFERED=1</td></tr>
+        <tr><td>Working directory</td><td>$w/minemeld-docker/minemeld.d</td></tr>
+        </table>
+    6. Build and start the docker-based services:
+        ```
+        docker-compose build
+        docker-compose up collectd rabbitmq redis
+        ```
+    7. Start debugging using the "engine" target
+        Run>Debug...>engine
+    8. Start debugging using the "traced" target
+        Run>Debug...>traced
+    9. Start debugging using the "web" target
+        Run>Debug...>web
 2. Setup minemeld-webui
-
-2.1. Configure WebStorm minemeld-webui project with ../nodeenv/minemeld-webui
-
-On the "WebStorm>Preferences>Languages & Frameworks>Node.js and NPM" page, add a new local node interpreter
-
-2.2. Open the Gulp tools window
-
-Click "View>Tool windows>Gulp"
-
-2.3. Setup the "serve" target
-
-Right click on the "serve" Gulp target
-Click "Edit 'serve' settings..."
-Set arguments to: --url http://127.0.0.1:5000
-
-2.4. Setup the "webui" target
-
-Click "Run>Edit Configurations..."
-Click "+>JavaScript Debug"
-Set name to "webui"
-Set URL to "http://localhost:3000"
-
-2.5. Debug the "serve" target
-
-2.6. Debug the "webui" target
-
-2.7. Command line testing
-```
-cd $w/minemeld-webui
-. ../pyenv/minemeld-webui/bin/activate
-. ../nodeenv/minemeld-webui/bin/activate
-PATH=$(npm bin):$PATH
-gulp serve --url http://127.0.0.1:5000
-```
+    1. Configure the WebStorm minemeld-webui project with the custom Node.js environment  
+        On the "WebStorm>Preferences>Languages & Frameworks>Node.js and NPM" page, click the "..." at the right of
+        the Node interpreter line, then click "+>Add Local..." and add ```${w}/nodeenv/minemeld-webui/bin/node``` 
+    2. Setup the "serve" target  
+        1. Click "View>Tool windows>Gulp" to open the Gulp tools window
+        2. Right click on the "serve" Gulp target  
+        3. Click "Edit 'serve' settings..."  
+        4. Set arguments to: --url http://127.0.0.1:5000
+    3. Setup the "webui" target
+        1. Click "Run>Edit Configurations..."  
+        2. Click "+>JavaScript Debug"  
+        3. Set name to "webui"  
+        4. Set URL to "http://localhost:3000"
+    4. Start debugging using the "serve" target
+    5. Start debugging using the "webui" target
+    6. Alternatively, you can use command line testing
+        ```
+        cd $w/minemeld-webui
+        . ../pyenv/minemeld-webui/bin/activate
+        . ../nodeenv/minemeld-webui/bin/activate
+        PATH=$(npm bin):$PATH
+        gulp serve --url http://127.0.0.1:5000
+        ```

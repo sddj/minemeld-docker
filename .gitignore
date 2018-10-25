@@ -1,3 +1,6 @@
+.DS_Store
+.localized
+.idea
 minemeld.d/running-config*.yml*
 minemeld.d/spamhaus_DROP
 minemeld.d/spamhaus_DROP.chkp
