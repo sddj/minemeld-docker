@@ -25,6 +25,18 @@ echo 2.7.15 >.python-version
 if ! grep .python-version .gitignore >/dev/null 2>&1; then
     (echo .python-version; echo minemeld/cli) >> .gitignore
 fi
+if ! grep '# Dockerization' requirements.txt >/dev/null 2>&1; then
+  (
+    echo "# Dockerization"
+    echo "Flask==0.11"
+    echo "gunicorn==19.3.0"
+    echo "psutil==3.1.1"
+    echo "Flask-Login==0.2.11"
+    echo "passlib==1.6.5"
+    echo "rrdtool==0.1.2"
+    echo "supervisor==3.1.3"
+  ) >>requirements.txt
+fi
 (
   echo "from gevent.monkey import patch_all"
   echo ""
