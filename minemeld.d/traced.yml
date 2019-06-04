@@ -1,9 +1,11 @@
 store:
   max_tables: 5
 transport:
-  class: AMQP
+  class: ZMQRedis
   config:
-    host: 127.0.0.1:10002
+    redis_url: redis://127.0.0.1:10001
+    #zmq_url: tcp://127.0.0.1:10002
+    zmq_url: ipc:///tmp/minemeld-{1}
 topic: mbus:log
 writer:
   threshold: 70

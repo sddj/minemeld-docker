@@ -36,19 +36,19 @@ nodes:
 #    output: false
 #    prototype: stdlib.feedMCGreen
 fabric:
-  class: AMQP
+  class: ZMQRedis
   config:
-    host: 127.0.0.1:10002
-    num_connections: 50
-    priority: -2
+    redis_url: redis://127.0.0.1:10001
+    #zmq_url: tcp://127.0.0.1:10002
+    zmq_url: ipc:///tmp/minemeld-{1}
 mgmtbus:
   transport:
-    class: AMQP
+    class: ZMQRedis
     config:
-      host: 127.0.0.1:10002
-      num_connections: 50
-      priority: -2
+      redis_url: redis://127.0.0.1:10001
+      #zmq_url: tcp://127.0.0.1:10002
+      zmq_url: ipc:///tmp/minemeld-{1}
   master:
-    REDIS_URL: redis://127.0.0.1:10001/0
+    REDIS_URL: redis://127.0.0.1:10001
     COLLECTD_SOCKET: tcp://127.0.0.1:10003
   slave:
