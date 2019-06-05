@@ -9,5 +9,7 @@ if [ ! -d $w/minemeld-docker/minemeld.d ]; then
     exit 1
 fi
 
-cd $w/minemeld-docker/minemeld.d
-rm -f ./running-config.yml* ./0??????????????? /tmp/minemeld-*
+cd $w/minemeld-docker
+rm -rf ./minemeld.d/0??????????????? ./minemeld.d/running-config.yml* ./minemeld.d/spamhaus_DROP.chkp
+rm -rf ./shared.d/log/collectd.log ./shared.d/rrd/{minemeld,system}
+rm -rf /tmp/minemeld-*
