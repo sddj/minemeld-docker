@@ -1,5 +1,7 @@
+MINEMELD_GIT_PATH: /usr/bin/git
 MINEMELD_LOCAL_LIBRARY_PATH: ./lib
 MINEMELD_LOG_DIRECTORY_PATH: .
+MINEMELD_NODES_PATH: ../../minemeld-core/nodes.json
 MINEMELD_PROTOTYPE_PATH: ../../minemeld-node-prototypes/prototypes
 MGMTBUS:
   class: ZMQRedis

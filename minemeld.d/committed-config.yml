@@ -1,54 +1,23 @@
-nodes:
-  spamhaus_DROP:
-    output: true
-    prototype: spamhaus.DROP
-#  spamhaus_EDROP:
-#    output: true
-#    prototype: spamhaus.EDROP
-#  dshield_blocklist:
-#    output: true
-#    prototype: dshield.block
-#  wlWhiteListIPv4:
-#    inputs: []
-#    output: true
-#    prototype: stdlib.listIPv4Generic
-#  inboundaggregator:
-#    inputs:
-#    - spamhaus_DROP
-#    - spamhaus_EDROP
-#    - dshield_blocklist
-#    - wlWhiteListIPv4
-#    output: true
-#    prototype: stdlib.aggregatorIPv4Inbound
-#  inboundfeedhc:
-#    inputs:
-#    - inboundaggregator
-#    output: false
-#    prototype: stdlib.feedHCGreen
-#  inboundfeedlc:
-#    inputs:
-#    - inboundaggregator
-#    output: false
-#    prototype: stdlib.feedLCGreen
-#  inboundfeedmc:
-#    inputs:
-#    - inboundaggregator
-#    output: false
-#    prototype: stdlib.feedMCGreen
 fabric:
   class: ZMQRedis
   config:
     redis_url: redis://127.0.0.1:10001
-    #zmq_url: tcp://127.0.0.1:10002
     zmq_url: ipc:///tmp/minemeld-{1}
 mgmtbus:
+  master:
+    COLLECTD_SOCKET: tcp://127.0.0.1:10003
+    REDIS_URL: redis://127.0.0.1:10001
+  slave: null
   transport:
     class: ZMQRedis
     config:
       redis_url: redis://127.0.0.1:10001
-      #zmq_url: tcp://127.0.0.1:10002
       zmq_url: ipc:///tmp/minemeld-{1}
-  master:
-    REDIS_URL: redis://127.0.0.1:10001
-    COLLECTD_SOCKET: tcp://127.0.0.1:10003
-  slave:
+nodes:
+  PhishTank:
+    inputs: []
+    output: true
+    prototype: hailataxii.guest_phishtank_com
+  spamhaus_DROP:
+    output: true
+    prototype: spamhaus.DROP
