@@ -1,9 +1,10 @@
 .DS_Store
 .localized
 .idea
-minemeld.d/running-config*.yml*
+minemeld.d/running-config.yml*
 minemeld.d/spamhaus_DROP
 minemeld.d/spamhaus_DROP.chkp
+minemeld.d/0???????????????
 shared.d/log/collectd.log
 shared.d/rrd/minemeld
 shared.d/rrd/system

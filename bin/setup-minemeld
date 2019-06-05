@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ -z "${w}" ]; then
-    echo 1>&2 'Please set $w to the directory containing the atat-api project'
+    echo 1>&2 'Please set $w to the directory containing the minemeld-docker project'
     exit 1
 fi
 
@@ -21,99 +21,23 @@ done
 
 cd $w/minemeld-core
 mkdir -p minemeld/cli
-echo 2.7.15 >.python-version
+if [ -f .python-version ]; then
+    echo 1>&2 "Found $(pwd)/.python-version"
+else
+    echo 2.7.15 >.python-version
+fi
 if ! grep .python-version .gitignore >/dev/null 2>&1; then
     (echo .python-version; echo minemeld/cli) >> .gitignore
 fi
 [ -d ../pyenv ] || mkdir -p ../pyenv
 [ -d ../pyenv/minemeld-core ] || virtualenv ../pyenv/minemeld-core
-if ! grep '# Dockerization' requirements.txt >/dev/null 2>&1; then
-  (
-    echo "# Dockerization"
-    echo "Flask==0.11"
-    echo "gunicorn==19.3.0"
-    echo "psutil==3.1.1"
-    echo "Flask-Login==0.2.11"
-    echo "passlib==1.6.5"
-    echo "rrdtool==0.1.2"
-    echo "supervisor==3.1.3"
-  ) >>requirements.txt
-fi
-(
-  echo "from gevent.monkey import patch_all"
-  echo ""
-  echo "patch_all()"
-  echo ""
-  echo ""
-  echo "def setup():"
-  echo "    pass"
-) >minemeld/cli/init.py
-(
-  echo "import sys"
-  echo ""
-  echo "from init import setup"
-  echo ""
-  echo "import json"
-  echo "import os"
-  echo ""
-  echo "import pkg_resources"
-  echo ""
-  echo "from minemeld.run.launcher import main"
-  echo ""
-  echo ""
-  echo "def _initialize_default_nodes_distribution(ws):"
-  echo "    try:"
-  echo "        with open(os.environ['MINEMELD_NODES_PATH'], 'r') as f:"
-  echo "            node_definitions = json.load(f)"
-  echo "        node_endpoints = ["
-  echo "            '{} = {}'.format(xk, xv['class'])"
-  echo "            for xk, xv in node_definitions.items()"
-  echo "            if 'class' in xv"
-  echo "        ]"
-  echo "        project_name = 'minemeld_synthetic_core'"
-  echo "        project_version = '1.0'"
-  echo "        python_version = '2.7'"
-  echo "        dist = pkg_resources.Distribution("
-  echo "            location='/tmp/{}-{}-py{}.egg'.format(project_name, project_version, python_version),"
-  echo "            project_name=project_name,"
-  echo "            version=project_version,"
-  echo "            py_version=python_version"
-  echo "        )"
-  echo "        node_map = {'minemeld_nodes': node_endpoints}"
-  echo "        dist._ep_map = pkg_resources.EntryPoint.parse_map(node_map, dist)"
-  echo "        ws.add(dist)"
-  echo "    except (KeyError, OSError):"
-  echo "        pass"
-  echo ""
-  echo ""
-  echo "if __name__ == '__main__':"
-  echo "    WS = pkg_resources.WorkingSet()"
-  echo "    _initialize_default_nodes_distribution(WS)"
-  echo "    setattr(sys.modules['minemeld.loader'], '_WS', WS)"
-  echo "    setup()"
-  echo "    main()"
-) >minemeld/cli/engine.py
-(
-  echo "from init import setup"
-  echo "from minemeld.flask.main import app"
-  echo ""
-  echo ""
-  echo "if __name__ == '__main__':"
-  echo "    setup()"
-  echo "    app.run(threaded=True)"
-) >minemeld/cli/web.py
-(
-  echo "from init import setup"
-  echo "from minemeld.traced.main import main"
-  echo ""
-  echo ""
-  echo "if __name__ == '__main__':"
-  echo "    setup()"
-  echo "    main()"
-) >minemeld/cli/traced.py
 
 cd $w/minemeld-webui
-echo 2.7.15 >.python-version
+if [ -f .python-version ]; then
+    echo 1>&2 "Found $(pwd)/.python-version"
+else
+    echo 2.7.15 >.python-version
+fi
 if ! grep .python-version .gitignore >/dev/null 2>&1; then
     echo .python-version >> .gitignore
 fi

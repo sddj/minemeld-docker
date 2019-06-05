@@ -1,0 +1,13 @@
+#!/bin/bash
+if [ -z "${w}" ]; then
+    echo 1>&2 'Please set $w to the directory containing the minemeld-docker project'
+    exit 1
+fi
+
+if [ ! -d $w/minemeld-docker/minemeld.d ]; then
+    echo 1>&2 "Cannot find directory: $w/minemeld-docker/minemeld.d"
+    exit 1
+fi
+
+cd $w/minemeld-docker/minemeld.d
+rm -f ./running-config.yml* ./0??????????????? /tmp/minemeld-*
