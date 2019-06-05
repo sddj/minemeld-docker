@@ -1,7 +1,11 @@
 MINEMELD_LOCAL_LIBRARY_PATH: .
-MINEMELD_LOG_DIRECTORY_PATH: /Users/dan/r/dev/minemeld-docker/minemeld.d
+MINEMELD_LOG_DIRECTORY_PATH: .
 MINEMELD_PROTOTYPE_PATH: ../../minemeld-node-prototypes/prototypes
 MGMTBUS:
-  class: AMQP
+  class: ZMQRedis
   config:
-    host: 127.0.0.1:10002
+    redis_url: redis://127.0.0.1:10001
+    #zmq_url: tcp://127.0.0.1:10002
+    zmq_url: ipc:///tmp/minemeld-{1}
+exceptions:
+  supervisor: suppress
