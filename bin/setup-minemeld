@@ -24,7 +24,7 @@ mkdir -p minemeld/cli
 if [ -f .python-version ]; then
     echo 1>&2 "Found $(pwd)/.python-version"
 else
-    echo 2.7.15 >.python-version
+    echo 2.7.16 >.python-version
 fi
 if ! grep .python-version .gitignore >/dev/null 2>&1; then
     (echo .python-version; echo minemeld/cli) >> .gitignore
@@ -36,7 +36,7 @@ cd $w/minemeld-webui
 if [ -f .python-version ]; then
     echo 1>&2 "Found $(pwd)/.python-version"
 else
-    echo 2.7.15 >.python-version
+    echo 2.7.16 >.python-version
 fi
 if ! grep .python-version .gitignore >/dev/null 2>&1; then
     echo .python-version >> .gitignore

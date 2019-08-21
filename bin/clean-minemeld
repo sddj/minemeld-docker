@@ -10,6 +10,7 @@ if [ ! -d $w/minemeld-docker/minemeld.d ]; then
 fi
 
 cd $w/minemeld-docker
-rm -rf ./minemeld.d/0??????????????? ./minemeld.d/running-config.yml* ./minemeld.d/spamhaus_DROP.chkp
+rm -rf ./minemeld.d/0??????????????? ./minemeld.d/running-config.yml*
+rm -rf ./minemeld.d/{PhishTank,spamhaus_DROP}{,.chkp}
 rm -rf ./shared.d/log/collectd.log ./shared.d/rrd/{minemeld,system}
 rm -rf /tmp/minemeld-*
